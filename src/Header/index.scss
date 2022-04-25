@@ -1,0 +1,8 @@
+.background {
+    background-color: red;
+    color: blue;
+
+    &--highlighted {
+        color: green;
+    }
+}
