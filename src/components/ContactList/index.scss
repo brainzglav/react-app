@@ -1,0 +1,5 @@
+.contact-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 240px);
+    gap: 10px;
+}
