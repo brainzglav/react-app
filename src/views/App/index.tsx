@@ -3,86 +3,43 @@ import ContactList from "components/ContactList";
 import Header from "components/Header";
 import InputField from "components/InputField";
 import { formatSearchQuery } from "components/utils/generic.util";
-import { Contact } from "models/contact.model";
+import ContactsHttp from "http/contacts.http";
+import { useMemo } from "react";
+import { useCallback } from "react";
+import { useEffect } from "react";
 import { ChangeEvent, useState } from "react";
 
-const _contacts: Contact[] = [
-  {
-    name: "Bikonja",
-    surname: "Bikic",
-    profilePicture:
-      "https://cdn.agroklub.com/upload/images/text/thumb/bik9-880x495.jpg",
-    phoneNumber: "+3853213213",
-    emailAddress: "bikonja.bikic@gmail.com",
-  },
-  {
-    name: "Mercedes",
-    surname: "Bikic",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "mercedes.bikic@gmail.com",
-  },
-  {
-    name: "Torpedo",
-    surname: "Horvat",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "torpedo1950@gmail.com",
-  },
-  {
-    name: "Torpedo",
-    surname: "Horvat",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "torpedo1950@gmail.com",
-  },
-  {
-    name: "Torpedo",
-    surname: "Horvat",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "torpedo1950@gmail.com",
-  },
-  {
-    name: "Torpedo",
-    surname: "Horvat",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "torpedo1950@gmail.com",
-  },
-  {
-    name: "Torpedo",
-    surname: "Horvat",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "torpedo1950@gmail.com",
-  },
-  {
-    name: "Torpedo",
-    surname: "Horvat",
-    profilePicture: "",
-    phoneNumber: "+3853213213",
-    emailAddress: "torpedo1950@gmail.com",
-  },
-].map((contact) => new Contact(contact));
-
 const App = () => {
-  const [contacts, setContacts] = useState(_contacts);
+  const [contacts, setContacts] = useState([]);
 
   const inputHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
-    const filteredContacts = _contacts.filter(({ fullName }) =>
-      formatSearchQuery(fullName).includes(formatSearchQuery(term))
-    );
 
-    setContacts(filteredContacts);
+    fetchContacts(term);
   };
+
+  const contactsHttp = useMemo(() => new ContactsHttp(), []);
+
+  const fetchContacts = useCallback(
+    async (query?: string) => {
+      const contacts = await contactsHttp.getContacts(query);
+
+      setContacts(contacts);
+    },
+    [contactsHttp]
+  );
+
+  useEffect(() => {
+    fetchContacts();
+  }, [fetchContacts]);
 
   return (
     <>
-      <Header title="Bikontakt"></Header>
+      <Header title="Bikontakt" />
       <section className="flex flex-column flex-align-center m-t-20">
-        <InputField onChange={inputHandler} type="text" icon={faSearch} />
+        <InputField icon={faSearch}>
+          <input onChange={inputHandler} type="text" placeholder="Search..." />
+        </InputField>
         <ContactList className="w-100" contacts={contacts}></ContactList>
       </section>
     </>
