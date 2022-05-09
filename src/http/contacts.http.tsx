@@ -19,6 +19,18 @@ class ContactsHttp extends HttpClient {
       formatSearchQuery(fullName).includes(formatSearchQuery(query))
     );
   }
+
+  public async replaceContact({ id, ...contact }: TContact): Promise<Contact> {
+    const { data } = await axios.put(this.url(`/contacts/${id}`), contact);
+
+    return new Contact(data);
+  }
+
+  public async updateContact(id: number, body: any): Promise<Contact> {
+    const { data } = await axios.patch(this.url(`/contacts/${id}`), body);
+
+    return new Contact(data);
+  }
 }
 
 export default ContactsHttp;

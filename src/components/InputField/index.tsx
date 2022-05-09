@@ -5,14 +5,14 @@ import { useState } from "react";
 
 import "./index.scss";
 
-const InputField = ({ children, icon }: Props) => {
+const InputField = ({ className = "", children, icon }: Props) => {
   const [focus, setFocus] = useState(false);
   const onFocus = () => setFocus(true);
   const onBlur = () => setFocus(false);
   const content = cloneElement(children, { onFocus, onBlur });
 
   return (
-    <div className={`input-field ${focus ? "focus" : ""}`}>
+    <div className={`input-field ${focus ? "focus" : ""} ${className}`}>
       <FontAwesomeIcon className="m-r-5" icon={icon} />
       {content}
     </div>
@@ -20,6 +20,7 @@ const InputField = ({ children, icon }: Props) => {
 };
 
 type Props = {
+  className?: string;
   children: any;
   icon?: IconProp;
 };

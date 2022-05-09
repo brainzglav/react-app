@@ -7,11 +7,30 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ImageFrame from "components/ImageFrame";
+import ContactsHttp from "http/contacts.http";
 import { Contact } from "models/contact.model";
+import { useState } from "react";
 import "./index.scss";
 
-const ContactCard = ({ contact }: Props) => {
-  const { fullName, profilePicture, phoneNumber, emailAddress } = contact;
+const ContactCard = ({ contact: _contact }: Props) => {
+  const [contact, setContact] = useState(_contact);
+  const {
+    id,
+    fullName,
+    profilePicture,
+    phoneNumber,
+    emailAddress,
+    isFavorite,
+  } = contact;
+  const contactsHttp = new ContactsHttp();
+
+  const favoriteHandler = async () => {
+    const newContact = await contactsHttp.updateContact(id, {
+      isFavorite: !isFavorite,
+    });
+
+    setContact(newContact);
+  };
 
   return (
     <li className="contact-card">
@@ -24,9 +43,10 @@ const ContactCard = ({ contact }: Props) => {
       <div className="contact-card__icon contact-card__icon--right">
         <FontAwesomeIcon
           className="m-r-5"
+          onClick={favoriteHandler}
           icon={faHeart}
           size="lg"
-          color="gray"
+          color={isFavorite ? "pink" : "gray"}
         />
         <FontAwesomeIcon icon={faPencil} size="lg" color="gray" />
       </div>
