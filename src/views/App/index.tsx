@@ -1,4 +1,5 @@
 import NavMenu from "components/NavMenu";
+import { ContactsProvider } from "context/contacts.context";
 import { Route, Routes } from "react-router-dom";
 import ContactPage from "./ContactPage";
 
@@ -11,7 +12,7 @@ const App = () => {
   ];
 
   return (
-    <>
+    <ContactsProvider>
       <header className="header">
         <h1 className="header__title">Bikontakt</h1>
       </header>
@@ -19,10 +20,10 @@ const App = () => {
         <NavMenu className="m-b-50" items={navItems}></NavMenu>
         <Routes>
           <Route path="/" element={<ContactPage />} />
-          <Route path="/favorites" element={<ContactPage isFavorites />} />
+          <Route path="/favorites" element={<ContactPage isFavoritesPage />} />
         </Routes>
       </main>
-    </>
+    </ContactsProvider>
   );
 };
 

@@ -1,12 +1,12 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import ContactList from "components/ContactList";
 import InputField from "components/InputField";
-import { ContactsContext, ContactsProvider } from "context/contacts.context";
+import { ContactsContext } from "context/contacts.context";
 import ContactsHttp from "http/contacts.http";
 import { useContext } from "react";
 import { ChangeEvent, useMemo, useCallback, useEffect } from "react";
 
-const ContactPage = ({ isFavorites }: Props) => {
+const ContactPage = ({ isFavoritesPage }: Props) => {
   const { contacts, setContacts } = useContext(ContactsContext);
 
   const inputHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,24 +28,24 @@ const ContactPage = ({ isFavorites }: Props) => {
 
   useEffect(() => {
     fetchContacts();
-  }, [fetchContacts]);
+  }, [fetchContacts, isFavoritesPage]);
 
-  const filteredContacts = isFavorites
+  const filteredContacts = isFavoritesPage
     ? contacts.filter(({ isFavorite }) => isFavorite)
     : contacts;
 
   return (
-    <ContactsProvider>
-      <InputField className={isFavorites ? "hidden" : ""} icon={faSearch}>
+    <>
+      <InputField className={isFavoritesPage ? "hidden" : ""} icon={faSearch}>
         <input onChange={inputHandler} type="text" placeholder="Search..." />
       </InputField>
       <ContactList className="w-100" contacts={filteredContacts}></ContactList>
-    </ContactsProvider>
+    </>
   );
 };
 
 type Props = {
-  isFavorites?: boolean;
+  isFavoritesPage?: boolean;
 };
 
 export default ContactPage;

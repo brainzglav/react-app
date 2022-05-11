@@ -28,7 +28,11 @@ const ContactCard = ({ contact: _contact }: Props) => {
   const contactsHttp = new ContactsHttp();
 
   const deleteHandler = async () => {
-    console.log("Delete");
+    const newContacts = contacts.filter((contact) => contact.id !== id);
+
+    await contactsHttp.deleteContact(id);
+
+    setContacts(newContacts);
   };
 
   const favoriteHandler = async () => {
