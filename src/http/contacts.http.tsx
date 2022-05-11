@@ -1,5 +1,5 @@
 import axios from "axios";
-import { formatSearchQuery } from "components/utils/generic.util";
+import { formatSearchQuery } from "utils/generic.util";
 import { BASE_API_URL } from "constants/api.constants";
 import { Contact, TContact } from "models/contact.model";
 import HttpClient from "./generic.http";

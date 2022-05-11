@@ -3,8 +3,12 @@ import ContactCard from "./ContactCard";
 import "./index.scss";
 
 const ContactList = ({ className = "", contacts }: Props) => {
-  const content = contacts.map((item: TContact, index: number) => {
-    return <ContactCard key={index} contact={new Contact(item)}></ContactCard>;
+  const content = contacts.map((item: TContact) => {
+    return (
+      <li key={item.id}>
+        <ContactCard contact={new Contact(item)}></ContactCard>
+      </li>
+    );
   });
 
   return <ul className={`contact-list ${className}`}>{content}</ul>;

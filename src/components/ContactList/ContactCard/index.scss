@@ -15,7 +15,7 @@
         transform: translateY(-3px);
 
         .contact-card__icon {
-            display: flex;
+            display: block;
         }
     }
 
@@ -28,11 +28,12 @@
     &__icon {
         display: none;
         position: absolute;
-        left: 20px;
+
+        &--left {
+            left: 20px;
+        }
 
         &--right {
-            justify-content: end;
-            left: 0;
             right: 20px;
         }
     }
