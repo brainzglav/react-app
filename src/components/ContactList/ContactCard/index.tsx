@@ -10,11 +10,14 @@ import ImageFrame from "components/ImageFrame";
 import { ContactsContext } from "context/contacts.context";
 import ContactsHttp from "http/contacts.http";
 import { Contact } from "models/contact.model";
-import { useContext } from "react";
-import { useState } from "react";
+import { MouseEvent, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { buildUrlParams } from "utils/generic.util";
+
 import "./index.scss";
 
 const ContactCard = ({ contact: _contact }: Props) => {
+  const navigate = useNavigate();
   const { contacts, setContacts } = useContext(ContactsContext);
   const [contact, setContact] = useState(_contact);
   const {
@@ -27,7 +30,9 @@ const ContactCard = ({ contact: _contact }: Props) => {
   } = contact;
   const contactsHttp = new ContactsHttp();
 
-  const deleteHandler = async () => {
+  const deleteHandler = async (event: MouseEvent) => {
+    event.stopPropagation();
+
     const newContacts = contacts.filter((contact) => contact.id !== id);
 
     await contactsHttp.deleteContact(id);
@@ -35,7 +40,9 @@ const ContactCard = ({ contact: _contact }: Props) => {
     setContacts(newContacts);
   };
 
-  const favoriteHandler = async () => {
+  const favoriteHandler = async (event: MouseEvent) => {
+    event.stopPropagation();
+
     const newContact = await contactsHttp.updateContact(id, {
       isFavorite: !isFavorite,
     });
@@ -47,8 +54,23 @@ const ContactCard = ({ contact: _contact }: Props) => {
     setContacts(newContacts);
   };
 
+  const navigateHandler = (event: MouseEvent, isReadonly?: boolean) => {
+    event.stopPropagation();
+
+    if (isReadonly) {
+      const query = buildUrlParams({ isReadonly });
+
+      return navigate(`/edit/${id}?${query}`);
+    }
+
+    navigate(`/edit/${id}`);
+  };
+
   return (
-    <article className="contact-card">
+    <article
+      className="contact-card"
+      onClick={(event) => navigateHandler(event, true)}
+    >
       <FontAwesomeIcon
         className="contact-card__icon contact-card__icon--left"
         onClick={deleteHandler}
@@ -64,7 +86,12 @@ const ContactCard = ({ contact: _contact }: Props) => {
           size="lg"
           color={isFavorite ? "pink" : "gray"}
         />
-        <FontAwesomeIcon icon={faPencil} size="lg" color="gray" />
+        <FontAwesomeIcon
+          icon={faPencil}
+          size="lg"
+          color="gray"
+          onClick={navigateHandler}
+        />
       </div>
       <ImageFrame imageUrl={profilePicture}></ImageFrame>
       <h3>{fullName}</h3>

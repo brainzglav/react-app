@@ -10,6 +10,11 @@
     border: 2px solid $color-primary;
     border-radius: 100%;
 
+    &--secondary {
+        background-color: transparent;
+        border: 2px dashed $color-primary;
+    }
+
     img {
         width: inherit;
         height: inherit;
