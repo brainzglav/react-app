@@ -59,7 +59,7 @@ const ContactPage = ({ isFavoritesPage }: Props) => {
   return (
     <>
       <NavMenu className="m-b-50" items={navItems}></NavMenu>
-      <InputField className={isFavoritesPage ? "hidden" : ""} icon={faSearch}>
+      <InputField className={isFavoritesPage && "hidden"} icon={faSearch}>
         <input
           onChange={inputHandler}
           type="text"

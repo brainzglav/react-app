@@ -1,3 +1,5 @@
+import { DEFAULT_ERRORS } from "constants/errors.constants";
+
 export function formatSearchQuery(query: string): string {
   return query.toLowerCase().replace(/\s/g, "");
 }
@@ -23,6 +25,30 @@ export function parseUrlParams(query: any): any {
   for (const [key, value] of params) {
     result[key] = value;
   }
+
+  return result;
+}
+
+export function createClass(obj: any, rest = ""): string {
+  const classes = Object.keys(obj)
+    .filter((key) => obj[key])
+    .map((key) => key)
+    .join(" ");
+
+  return `${classes} ${rest}`;
+}
+
+export function validators(obj: any): any {
+  const result = Object.keys(obj).reduce((acc: any, key: string) => {
+    const validator = {
+      value: obj[key],
+      message: DEFAULT_ERRORS[key] || key,
+    };
+
+    return { ...acc, [key]: validator };
+  }, {});
+
+  console.log(result);
 
   return result;
 }

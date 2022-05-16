@@ -3,6 +3,7 @@ import { faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { colorPrimary } from "constants/colors.constants";
 
 import "./index.scss";
+import { createClass } from "utils/generic.util";
 
 const ImageFrame = ({ imageUrl, icon }: Props) => {
   const createContent = () => {
@@ -16,12 +17,12 @@ const ImageFrame = ({ imageUrl, icon }: Props) => {
 
     return <FontAwesomeIcon icon={faUser} size="3x" color="gray" />;
   };
-
-  return (
-    <div className={`image-frame ${icon ? "image-frame--secondary" : ""}`}>
-      {createContent()}
-    </div>
+  const classes = createClass(
+    { "image-frame--secondary": icon },
+    "image-frame"
   );
+
+  return <div className={classes}>{createContent()}</div>;
 };
 
 type Props = { imageUrl?: string; icon?: IconDefinition };

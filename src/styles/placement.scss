@@ -85,6 +85,10 @@ $spaces: (
     .w-#{5 * $i} {
         width: 5% * $i;
     }
+
+    .w-px-#{25 * $i} {
+        width: 25px * $i;
+    }
 }
 
 .hidden {
