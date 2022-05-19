@@ -20,6 +20,18 @@ class ContactsHttp extends HttpClient {
     );
   }
 
+  public async getContact(id: number): Promise<Contact> {
+    const { data } = await axios.get(this.url(`/contacts/${id}`));
+
+    return new Contact(data);
+  }
+
+  public async createContact(contact: TContact): Promise<Contact> {
+    const { data } = await axios.post(this.url(`/contacts`), contact);
+
+    return new Contact(data);
+  }
+
   public async replaceContact({ id, ...contact }: TContact): Promise<Contact> {
     const { data } = await axios.put(this.url(`/contacts/${id}`), contact);
 

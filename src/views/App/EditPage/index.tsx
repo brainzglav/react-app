@@ -1,40 +1,57 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import InputField from "components/InputField";
-import { FormEvent } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import Form from "components/Form";
+import ContactsHttp from "http/contacts.http";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { parseUrlParams, validators } from "utils/generic.util";
-import { useForm } from "react-hook-form";
+import { TContact } from "models/contact.model";
+import { useCallback, useMemo } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const EditPage = () => {
-  const params = useParams();
+  const { id } = useParams();
   const { search } = useLocation();
+  const navigate = useNavigate();
   const { isReadonly } = parseUrlParams(search);
-  const { register, handleSubmit, formState } = useForm();
+  const [contact, setContact] = useState(null);
+  const contactsHttp = useMemo(() => new ContactsHttp(), []);
 
-  console.log({ params, isReadonly });
+  const submitHandler = async (data: TContact) => {
+    if (id) {
+      await contactsHttp.replaceContact({ id, ...data });
+    } else {
+      await contactsHttp.createContact(data);
+    }
 
-  const submitHandler = (data: any) => {
-    console.log("Submitted", { data, formState });
+    navigate("/");
   };
 
-  setInterval(() => console.log(formState.errors), 3000);
+  const fetchContact = useCallback(async () => {
+    const contact = await contactsHttp.getContact(+id);
+
+    setContact(contact);
+  }, [contactsHttp, id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchContact();
+    }
+  }, [fetchContact, id]);
 
   return (
-    <form onSubmit={handleSubmit(submitHandler)}>
+    <Form onSubmit={submitHandler} preFill={contact}>
       <InputField
         className="w-px-150"
         label="First name:"
         icon={faUser}
         isDisabled={!!isReadonly}
-        formControl={[
-          "name",
-          validators({ required: true, maxLength: 10, pattern: /[x]/ }),
-        ]}
+        formControl={["name", validators({ required: true, maxLength: 20 })]}
       >
         <input type="text" placeholder="First name" />
       </InputField>
       <button>Submit</button>
-    </form>
+    </Form>
   );
 };
 

@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { colorPrimary } from "constants/colors.constants";
+import { COLOR_PRIMARY } from "constants/colors.constants";
 
 import "./index.scss";
 import { createClass } from "utils/generic.util";
@@ -8,7 +8,7 @@ import { createClass } from "utils/generic.util";
 const ImageFrame = ({ imageUrl, icon }: Props) => {
   const createContent = () => {
     if (icon) {
-      return <FontAwesomeIcon icon={icon} size="3x" color={colorPrimary} />;
+      return <FontAwesomeIcon icon={icon} size="3x" color={COLOR_PRIMARY} />;
     }
 
     if (imageUrl) {

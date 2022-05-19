@@ -48,7 +48,5 @@ export function validators(obj: any): any {
     return { ...acc, [key]: validator };
   }, {});
 
-  console.log(result);
-
   return result;
 }
