@@ -1,11 +1,11 @@
 import { Contact, TContact } from "models/contact.model";
 import ContactCard from "./ContactCard";
-
-import "./index.scss";
-import "./ContactCard/index.scss";
 import ImageFrame from "components/ImageFrame";
 import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+
+import "./index.scss";
+import "./ContactCard/index.scss";
 
 const ContactList = ({ className = "", contacts, hasAdd }: Props) => {
   const navigate = useNavigate();

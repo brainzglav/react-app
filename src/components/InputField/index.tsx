@@ -6,6 +6,8 @@ import { useFormContext } from "react-hook-form";
 
 import "./index.scss";
 import { COLOR_DANGER, COLOR_PRIMARY } from "constants/colors.constants";
+import { useContext } from "react";
+import { CustomFormContext } from "context/custom-form.context";
 
 const InputField = ({
   className = "",

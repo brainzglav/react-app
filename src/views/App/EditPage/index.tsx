@@ -45,7 +45,6 @@ const EditPage = () => {
         className="w-px-150"
         label="First name:"
         icon={faUser}
-        isDisabled={!!isReadonly}
         formControl={["name", validators({ required: true, maxLength: 20 })]}
       >
         <input type="text" placeholder="First name" />
