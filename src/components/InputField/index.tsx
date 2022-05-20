@@ -26,10 +26,11 @@ const InputField = ({
     ? { ...defaultProps, ...methods?.register(id, validators) }
     : defaultProps;
   const errorMessage = methods?.formState?.errors[id]?.message;
-
-  const content = cloneElement(children, props);
   const classes = createClass({ focus: isFocus, disabled }, className);
+  
   const createContent = () => {
+    const content = cloneElement(children, props);
+
     if (disabled) {
       const value = methods?.getValues(id);
 
