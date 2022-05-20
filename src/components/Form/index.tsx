@@ -1,10 +1,7 @@
-import {
-  CustomFormContext,
-  CustomFormProvider,
-} from "context/custom-form.context";
-import { useContext } from "react";
+import { CustomFormProvider } from "context/custom-form.context";
 import { useEffect } from "react";
 import { createClass } from "utils/generic.util";
+import { useForm } from "react-hook-form";
 
 const Form = ({
   children,
@@ -13,7 +10,7 @@ const Form = ({
   preFill,
   isDisabled,
 }: Props) => {
-  const methods = useContext(CustomFormContext);
+  const methods = useForm();
   const classes = createClass(
     { submitted: methods.formState.isSubmitted },
     className
@@ -22,7 +19,7 @@ const Form = ({
   useEffect(() => methods.reset(preFill), [preFill, methods]);
 
   return (
-    <CustomFormProvider isDisabled={isDisabled}>
+    <CustomFormProvider isDisabled={isDisabled} methods={methods}>
       <form className={classes} onSubmit={methods.handleSubmit(onSubmit)}>
         {children}
       </form>

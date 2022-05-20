@@ -2,43 +2,38 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cloneElement, useState } from "react";
 import { createClass } from "utils/generic.util";
-import { useFormContext } from "react-hook-form";
-
-import "./index.scss";
 import { COLOR_DANGER, COLOR_PRIMARY } from "constants/colors.constants";
 import { useContext } from "react";
 import { CustomFormContext } from "context/custom-form.context";
+
+import "./index.scss";
 
 const InputField = ({
   className = "",
   label = "",
   children,
   icon,
-  isDisabled = false,
   formControl = null,
 }: Props) => {
   const [isFocus, setFocus] = useState(false);
   const onFocus = () => setFocus(true);
   const onBlur = () => setFocus(false);
-  const defaultProps = { onFocus, onBlur, disabled: isDisabled };
 
-  const methods = useFormContext();
+  const { disabled, ...methods } = useContext(CustomFormContext);
+  const defaultProps = { onFocus, onBlur, disabled };
   const [id, validators] = formControl || [];
   const props = formControl
     ? { ...defaultProps, ...methods?.register(id, validators) }
     : defaultProps;
-  const errorMessage = methods?.formState.errors[id]?.message;
+  const errorMessage = methods?.formState?.errors[id]?.message;
 
   const content = cloneElement(children, props);
-  const classes = createClass(
-    { focus: isFocus, disabled: isDisabled },
-    className
-  );
+  const classes = createClass({ focus: isFocus, disabled }, className);
   const createContent = () => {
-    const props: any = content.props;
+    if (disabled) {
+      const value = methods?.getValues(id);
 
-    if (isDisabled) {
-      return props.value || "N/A";
+      return value || "N/A";
     }
 
     return content;

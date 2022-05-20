@@ -40,7 +40,7 @@ const EditPage = () => {
   }, [fetchContact, id]);
 
   return (
-    <Form onSubmit={submitHandler} preFill={contact}>
+    <Form onSubmit={submitHandler} preFill={contact} isDisabled={isReadonly}>
       <InputField
         className="w-px-150"
         label="First name:"

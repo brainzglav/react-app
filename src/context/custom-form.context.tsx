@@ -1,4 +1,4 @@
-import { useForm, FormProvider } from "react-hook-form";
+import { FormProvider } from "react-hook-form";
 import { useState, createContext } from "react";
 
 const CustomFormContext = createContext({
@@ -6,9 +6,8 @@ const CustomFormContext = createContext({
   setDisabled: (isDisabled: boolean) => {},
 } as any);
 
-const CustomFormProvider = ({ isDisabled, children }: Props) => {
+const CustomFormProvider = ({ isDisabled, children, methods }: Props) => {
   const [disabled, setDisabled] = useState(isDisabled);
-  const methods = useForm();
 
   return (
     <CustomFormContext.Provider value={{ disabled, setDisabled, ...methods }}>
@@ -20,6 +19,7 @@ const CustomFormProvider = ({ isDisabled, children }: Props) => {
 type Props = {
   isDisabled?: boolean;
   children: any;
+  methods: any;
 };
 
 export { CustomFormContext, CustomFormProvider };
