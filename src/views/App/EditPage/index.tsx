@@ -3,7 +3,7 @@ import InputField from "components/InputField";
 import Form from "components/Form";
 import ContactsHttp from "http/contacts.http";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { parseUrlParams, validators } from "utils/generic.util";
+import { fileToBase64, parseUrlParams, validators } from "utils/generic.util";
 import { TContact } from "models/contact.model";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { EMAIL_REGEX } from "constants/regex.constants";
@@ -39,13 +39,10 @@ const EditPage = () => {
     }
   }, [fetchContact, id]);
 
-  const imageHandler = (event: any) => {
-    console.log(event.target.value);
-  };
-
   return (
     <Form onSubmit={submitHandler} preFill={contact} isDisabled={isReadonly}>
       <ImageFrame
+        className="m-b-20"
         imageUrl={contact?.profilePicture}
         formControl={["profilePicture"]}
       ></ImageFrame>

@@ -7,42 +7,55 @@ import {
 import { COLOR_PRIMARY } from "constants/colors.constants";
 
 import "./index.scss";
-import { createClass } from "utils/generic.util";
+import { createClass, fileToBase64 } from "utils/generic.util";
 import { useContext } from "react";
 import { CustomFormContext } from "context/custom-form.context";
+import { useState } from "react";
+import { useEffect } from "react";
 
-const ImageFrame = ({ imageUrl, icon, formControl = null }: Props) => {
-  const methods = useContext(CustomFormContext);
-  const [id, validators] = formControl;
-
+const ImageFrame = ({
+  className = "",
+  imageUrl,
+  icon,
+  formControl = null,
+}: Props) => {
+  const [id, validators] = formControl || [];
+  const { disabled, ...methods } = useContext(CustomFormContext);
+  const [image, setImage] = useState(null);
+  const isFormEnabled = formControl && !disabled;
   const placeholder = (
     <FontAwesomeIcon
-      icon={formControl ? faUpload : faUser}
+      icon={isFormEnabled ? faUpload : faUser}
       size="3x"
       color="gray"
     />
   );
 
+  const imageHandler = async (event: any) => {
+    const image = await fileToBase64(event.target.files);
+
+    methods.setValue(id, image);
+    setImage(image as string);
+  };
+
   const createContent = () => {
-    if (formControl) {
+    if (isFormEnabled) {
       return (
-        <>
-          {placeholder}
-          <label htmlFor="image-upload"></label>
-          <input id="image-upload" type="file" accept="image/*" />
-        </>
+        <label htmlFor="image-upload">
+          {image ? <img src={image} alt="" /> : placeholder}
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            {...methods.register(id, validators)}
+            onChange={imageHandler}
+          />
+        </label>
       );
     }
 
     if (icon) {
-      return (
-        <FontAwesomeIcon
-          icon={icon}
-          size="3x"
-          color={COLOR_PRIMARY}
-          {...methods.register()}
-        />
-      );
+      return <FontAwesomeIcon icon={icon} size="3x" color={COLOR_PRIMARY} />;
     }
 
     if (imageUrl) {
@@ -51,14 +64,28 @@ const ImageFrame = ({ imageUrl, icon, formControl = null }: Props) => {
 
     return placeholder;
   };
+
   const classes = createClass(
     { "image-frame--secondary": icon },
-    "image-frame"
+    `image-frame ${className}`
   );
+
+  useEffect(() => {
+    if (isFormEnabled) {
+      return setImage(methods.getValues(id));
+    }
+
+    setImage(imageUrl);
+  }, [methods, id, imageUrl, isFormEnabled]);
 
   return <div className={classes}>{createContent()}</div>;
 };
 
-type Props = { imageUrl?: string; icon?: IconDefinition; formControl?: any[] };
+type Props = {
+  className?: string;
+  imageUrl?: string;
+  icon?: IconDefinition;
+  formControl?: any[];
+};
 
 export default ImageFrame;
