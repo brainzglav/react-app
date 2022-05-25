@@ -3,18 +3,26 @@ import InputField from "components/InputField";
 import Form from "components/Form";
 import ContactsHttp from "http/contacts.http";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { fileToBase64, parseUrlParams, validators } from "utils/generic.util";
+import { parseUrlParams, validators } from "utils/generic.util";
 import { TContact } from "models/contact.model";
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { EMAIL_REGEX } from "constants/regex.constants";
 import ImageFrame from "components/ImageFrame";
+import { EMAIL_PATTERN } from "constants/errors.constants";
+import Button from "components/Button";
 
 const EditPage = () => {
   const { id } = useParams();
   const { search } = useLocation();
   const navigate = useNavigate();
   const { isReadonly } = parseUrlParams(search);
-  const [contact, setContact] = useState(null);
+  const [contact, setContact] = useState({
+    name: "",
+    surname: "",
+    profilePicture: "",
+    phoneNumber: "",
+    emailAddress: "",
+    isFavorite: false,
+  });
   const contactsHttp = useMemo(() => new ContactsHttp(), []);
 
   const submitHandler = async (data: TContact) => {
@@ -40,10 +48,16 @@ const EditPage = () => {
   }, [fetchContact, id]);
 
   return (
-    <Form onSubmit={submitHandler} preFill={contact} isDisabled={isReadonly}>
+    <Form
+      className="flex flex-column flex-align-center"
+      onSubmit={submitHandler}
+      preFill={contact}
+      isDisabled={isReadonly}
+    >
       <ImageFrame
         className="m-b-20"
         imageUrl={contact?.profilePicture}
+        size="medium"
         formControl={["profilePicture"]}
       ></ImageFrame>
       <InputField
@@ -68,10 +82,10 @@ const EditPage = () => {
         icon={faEnvelope}
         formControl={[
           "emailAddress",
-          validators({ required: true, pattern: EMAIL_REGEX }),
+          validators({ required: true, pattern: EMAIL_PATTERN }),
         ]}
       >
-        <input name="email" type="email" placeholder="Email" />
+        <input name="email" type="text" placeholder="Email" />
       </InputField>
       <InputField
         className="w-px-250"
@@ -82,7 +96,7 @@ const EditPage = () => {
         <input name="phone" type="text" placeholder="Phone number" />
       </InputField>
 
-      <button>Submit</button>
+      <Button className="m-b-20">Submit</Button>
     </Form>
   );
 };

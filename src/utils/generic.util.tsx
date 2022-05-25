@@ -40,12 +40,12 @@ export function createClass(obj: any, rest = ""): string {
 
 export function validators(obj: any): any {
   const result = Object.keys(obj).reduce((acc: any, key: string) => {
-    const validator = {
-      value: obj[key],
-      message: DEFAULT_ERRORS[key] || key,
-    };
+    const error = DEFAULT_ERRORS[key] || key;
+    const value = obj[key]?.value || obj[key];
+    const message =
+      typeof error === "function" ? error(obj[key]?.message || value) : error;
 
-    return { ...acc, [key]: validator };
+    return { ...acc, [key]: { value, message } };
   }, {});
 
   return result;

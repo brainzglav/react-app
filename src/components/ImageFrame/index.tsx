@@ -5,19 +5,27 @@ import {
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 import { COLOR_PRIMARY } from "constants/colors.constants";
-
-import "./index.scss";
 import { createClass, fileToBase64 } from "utils/generic.util";
 import { useContext } from "react";
 import { CustomFormContext } from "context/custom-form.context";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Size } from "models/generic.model";
+
+import "./index.scss";
+
+enum IconSize {
+  small = "3x",
+  medium = "5x",
+  large = "5x",
+}
 
 const ImageFrame = ({
   className = "",
   imageUrl,
   icon,
   formControl = null,
+  size = "small",
 }: Props) => {
   const [id, validators] = formControl || [];
   const { disabled, ...methods } = useContext(CustomFormContext);
@@ -26,7 +34,7 @@ const ImageFrame = ({
   const placeholder = (
     <FontAwesomeIcon
       icon={isFormEnabled ? faUpload : faUser}
-      size="3x"
+      size={IconSize[size]}
       color="gray"
     />
   );
@@ -55,7 +63,13 @@ const ImageFrame = ({
     }
 
     if (icon) {
-      return <FontAwesomeIcon icon={icon} size="3x" color={COLOR_PRIMARY} />;
+      return (
+        <FontAwesomeIcon
+          icon={icon}
+          size={IconSize[size]}
+          color={COLOR_PRIMARY}
+        />
+      );
     }
 
     if (imageUrl) {
@@ -67,7 +81,7 @@ const ImageFrame = ({
 
   const classes = createClass(
     { "image-frame--secondary": icon },
-    `image-frame ${className}`
+    `image-frame image-frame--${size} ${className}`
   );
 
   useEffect(() => {
@@ -86,6 +100,7 @@ type Props = {
   imageUrl?: string;
   icon?: IconDefinition;
   formControl?: any[];
+  size?: Size;
 };
 
 export default ImageFrame;

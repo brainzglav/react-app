@@ -5,11 +5,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 75px;
-    height: 75px;
     background-color: $color-placeholder;
     border: 2px solid $color-primary;
     border-radius: 100%;
+
+    &--small {
+        width: 75px;
+        height: 75px;
+    }
+
+    &--medium {
+        width: 150px;
+        height: 150px;
+    }
 
     &--secondary {
         background-color: transparent;
