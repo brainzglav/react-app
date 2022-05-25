@@ -6,6 +6,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ConfirmationModal from "components/ConfirmationModal";
 import ImageFrame from "components/ImageFrame";
 import { ContactsContext } from "context/contacts.context";
 import ContactsHttp from "http/contacts.http";
@@ -28,11 +29,15 @@ const ContactCard = ({ contact: _contact }: Props) => {
     emailAddress,
     isFavorite,
   } = contact;
+  const [isModalActive, setIsModalActive] = useState(false);
   const contactsHttp = new ContactsHttp();
 
-  const deleteHandler = async (event: MouseEvent) => {
+  const openModal = (event: MouseEvent) => {
     event.stopPropagation();
+    setIsModalActive(true);
+  };
 
+  const deleteHandler = async () => {
     const newContacts = contacts.filter((contact) => contact.id !== id);
 
     await contactsHttp.deleteContact(id);
@@ -67,46 +72,58 @@ const ContactCard = ({ contact: _contact }: Props) => {
   };
 
   return (
-    <article
-      className="contact-card"
-      onClick={(event) => navigateHandler(event, true)}
-    >
-      <FontAwesomeIcon
-        className="contact-card__icon contact-card__icon--left"
-        onClick={deleteHandler}
-        icon={faTrash}
-        size="lg"
-        color="gray"
-      />
-      <div className="contact-card__icon contact-card__icon--right">
+    <>
+      {isModalActive && (
+        <ConfirmationModal
+          onConfirm={deleteHandler}
+          stateHandler={setIsModalActive}
+        >
+          <h2>Delete contact</h2>
+
+          <p>Are you sure you want to delete {fullName}?</p>
+        </ConfirmationModal>
+      )}
+      <article
+        className="contact-card"
+        onClick={(event) => navigateHandler(event, true)}
+      >
         <FontAwesomeIcon
-          className="m-r-5"
-          onClick={favoriteHandler}
-          icon={faHeart}
-          size="lg"
-          color={isFavorite ? "pink" : "gray"}
-        />
-        <FontAwesomeIcon
-          icon={faPencil}
+          className="contact-card__icon contact-card__icon--left"
+          onClick={openModal}
+          icon={faTrash}
           size="lg"
           color="gray"
-          onClick={navigateHandler}
         />
-      </div>
-      <ImageFrame imageUrl={profilePicture}></ImageFrame>
-      <h3>{fullName}</h3>
+        <div className="contact-card__icon contact-card__icon--right">
+          <FontAwesomeIcon
+            className="m-r-5"
+            onClick={favoriteHandler}
+            icon={faHeart}
+            size="lg"
+            color={isFavorite ? "pink" : "gray"}
+          />
+          <FontAwesomeIcon
+            icon={faPencil}
+            size="lg"
+            color="gray"
+            onClick={navigateHandler}
+          />
+        </div>
+        <ImageFrame imageUrl={profilePicture}></ImageFrame>
+        <h3>{fullName}</h3>
 
-      <div className="contact-card__info">
-        <div className="flex">
-          <FontAwesomeIcon icon={faEnvelope} size="lg" color="gray" />
-          <span>{emailAddress}</span>
+        <div className="contact-card__info">
+          <div className="flex">
+            <FontAwesomeIcon icon={faEnvelope} size="lg" color="gray" />
+            <span>{emailAddress}</span>
+          </div>
+          <div className="flex">
+            <FontAwesomeIcon icon={faPhone} size="lg" color="gray" />
+            <span>{phoneNumber}</span>
+          </div>
         </div>
-        <div className="flex">
-          <FontAwesomeIcon icon={faPhone} size="lg" color="gray" />
-          <span>{phoneNumber}</span>
-        </div>
-      </div>
-    </article>
+      </article>
+    </>
   );
 };
 
